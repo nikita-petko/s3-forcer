@@ -111,6 +111,7 @@ build-debug-arm64: vendor
 	@cd ./src && export GOARCH=$(GOARCH)&& export GOOS=$(GOOS)&& go build -mod=vendor -ldflags "-X main.commitSha=$(IMAGE_TAG) -X main.buildMode=debug -X main.applicationName=$(PROJECT_NAME)" -v -o ../bin/debug/$(GOOS)/arm64/$(OUTFILE) ./main.go $(TO_NUL) || echo Go Build returned a non-zero status code
 
 
+
 build-release-x86: vendor
 	$(eval GOARCH := 386)
 	$(info Go Release Build For is now set to: $(GOOS)/$(GOARCH) -> $(CURDIR)/bin/release/$(GOOS)/x86/$(OUTFILE))
