@@ -81,24 +81,14 @@ jobs:
       fail-fast: true
 
     steps:
-    - name: Download All Artifacts
-      run: |
-        run_id=$(echo "${{ github.run_id }}")
-        job_id=$(echo "${{ github.job }}")
-        artifacts=$(curl -sH "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-                      "https://api.github.com/repos/${{ github.repository }}/actions/runs/${run_id}/jobs/${job_id}/artifacts" \
-                      | jq -r '.artifacts[].name')
-        for artifact in $artifacts; do
-          echo "Downloading artifact: $artifact"
-          actions/download-artifact@v2
-            with:
-              name: $artifact
-              path: build
-        done
+    - name: Download  Artifacts
+      uses: actions/download-artifact@v3
+      with:
+        path: build
 
-    - name: Print
+    - name: list
       run: ls build
-    
+
     # - name: Create Release
     #   id: create_release
     #   uses: softprops/action-gh-release@v1
