@@ -134,7 +134,7 @@ github.com/sendgrid/rest
 ## explicit
 github.com/sendgrid/sendgrid-go
 github.com/sendgrid/sendgrid-go/helpers/mail
-# golang.org/x/sync v0.1.0
+# golang.org/x/sync v0.2.0
 ## explicit
 golang.org/x/sync/semaphore
 # golang.org/x/sys v0.6.0
