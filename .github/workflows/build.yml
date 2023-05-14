@@ -15,7 +15,7 @@ on:
 env:
   PROJECT_NAME: 's3-forcer'
 
-  
+
 jobs:
   lint:
     name: Go lint
@@ -44,7 +44,7 @@ jobs:
         fail-fast: true
         matrix:
             os: ["linux", "darwin", "windows"]
-            arch: ["x86", "x64", "arm", "arm64"]
+            arch: ["x64", "arm64"]
             config: ["debug", "release"]
     
     steps:
