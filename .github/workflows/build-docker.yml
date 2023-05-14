@@ -23,7 +23,7 @@ on:
       company:
         description: 'The name of the project company.'
         required: true
-        default: 'nikita-petko'
+        default: 'mfdlabs'
       project:
         description: 'The name of the project'
         required: true
