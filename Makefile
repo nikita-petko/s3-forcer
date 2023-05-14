@@ -93,51 +93,51 @@ endif
 build-debug-x86: vendor
 	$(eval GOARCH := 386)
 	$(info Go Debug Build For is now set to: $(GOOS)/$(GOARCH) -> $(CURDIR)/bin/debug/$(GOOS)/x86/$(OUTFILE))
-	@cd ./src && export CGO_ENABLED=1&& export GOARCH=$(GOARCH)&& export GOOS=$(GOOS)&& go build -mod=vendor -ldflags "-X main.commitSha=$(IMAGE_TAG) -X main.buildMode=debug -X main.applicationName=$(PROJECT_NAME)" -v -o ../bin/debug/$(GOOS)/x86/$(OUTFILE) ./main.go $(TO_NUL) || echo Go Build returned a non-zero status code
+	@cd ./src && export GOARCH=$(GOARCH)&& export GOOS=$(GOOS)&& go build -mod=vendor -ldflags "-X main.commitSha=$(IMAGE_TAG) -X main.buildMode=debug -X main.applicationName=$(PROJECT_NAME)" -v -o ../bin/debug/$(GOOS)/x86/$(OUTFILE) ./main.go $(TO_NUL) || echo Go Build returned a non-zero status code
 
 build-debug-x64: vendor
 	$(eval GOARCH := amd64)
 	$(info Go Debug Build For is now set to: $(GOOS)/$(GOARCH) -> $(CURDIR)/bin/debug/$(GOOS)/x64/$(OUTFILE))
-	@cd ./src && export CGO_ENABLED=1&& export GOARCH=$(GOARCH)&& export GOOS=$(GOOS)&& go build -mod=vendor -ldflags "-X main.commitSha=$(IMAGE_TAG) -X main.buildMode=debug -X main.applicationName=$(PROJECT_NAME)" -v -o ../bin/debug/$(GOOS)/x64/$(OUTFILE) ./main.go $(TO_NUL) || echo Go Build returned a non-zero status code
+	@cd ./src && export GOARCH=$(GOARCH)&& export GOOS=$(GOOS)&& go build -mod=vendor -ldflags "-X main.commitSha=$(IMAGE_TAG) -X main.buildMode=debug -X main.applicationName=$(PROJECT_NAME)" -v -o ../bin/debug/$(GOOS)/x64/$(OUTFILE) ./main.go $(TO_NUL) || echo Go Build returned a non-zero status code
 
 build-debug-arm: vendor
 	$(eval GOARCH := arm)
 	$(info Go Debug Build For is now set to: $(GOOS)/$(GOARCH) -> $(CURDIR)/bin/debug/$(GOOS)/arm/$(OUTFILE))
-	@cd ./src && export CGO_ENABLED=1&& export GOARCH=$(GOARCH)&& export GOOS=$(GOOS)&& go build -mod=vendor -ldflags "-X main.commitSha=$(IMAGE_TAG) -X main.buildMode=debug -X main.applicationName=$(PROJECT_NAME)" -v -o ../bin/debug/$(GOOS)/arm/$(OUTFILE) ./main.go $(TO_NUL) || echo Go Build returned a non-zero status code
+	@cd ./src && export GOARCH=$(GOARCH)&& export GOOS=$(GOOS)&& go build -mod=vendor -ldflags "-X main.commitSha=$(IMAGE_TAG) -X main.buildMode=debug -X main.applicationName=$(PROJECT_NAME)" -v -o ../bin/debug/$(GOOS)/arm/$(OUTFILE) ./main.go $(TO_NUL) || echo Go Build returned a non-zero status code
 
 build-debug-arm64: vendor
 	$(eval GOARCH := arm64)
 	$(info Go Debug Build For is now set to: $(GOOS)/$(GOARCH) -> $(CURDIR)/bin/debug/$(GOOS)/arm64/$(OUTFILE))
-	@cd ./src && export CGO_ENABLED=1&& export GOARCH=$(GOARCH)&& export GOOS=$(GOOS)&& go build -mod=vendor -ldflags "-X main.commitSha=$(IMAGE_TAG) -X main.buildMode=debug -X main.applicationName=$(PROJECT_NAME)" -v -o ../bin/debug/$(GOOS)/arm64/$(OUTFILE) ./main.go $(TO_NUL) || echo Go Build returned a non-zero status code
+	@cd ./src && export GOARCH=$(GOARCH)&& export GOOS=$(GOOS)&& go build -mod=vendor -ldflags "-X main.commitSha=$(IMAGE_TAG) -X main.buildMode=debug -X main.applicationName=$(PROJECT_NAME)" -v -o ../bin/debug/$(GOOS)/arm64/$(OUTFILE) ./main.go $(TO_NUL) || echo Go Build returned a non-zero status code
 
 
 build-release-x86: vendor
 	$(eval GOARCH := 386)
 	$(info Go Release Build For is now set to: $(GOOS)/$(GOARCH) -> $(CURDIR)/bin/release/$(GOOS)/x86/$(OUTFILE))
-	@cd ./src && export CGO_ENABLED=1&& export GOARCH=$(GOARCH)&& export GOOS=$(GOOS)&& go build -mod=vendor -ldflags "-s -w -X main.commitSha=$(IMAGE_TAG) -X main.buildMode=release -X main.applicationName=$(PROJECT_NAME)" -v -o ../bin/release/$(GOOS)/x86/$(OUTFILE) ./main.go $(TO_NUL) || echo Go Build returned a non-zero status code
+	@cd ./src && export GOARCH=$(GOARCH)&& export GOOS=$(GOOS)&& go build -mod=vendor -ldflags "-s -w -X main.commitSha=$(IMAGE_TAG) -X main.buildMode=release -X main.applicationName=$(PROJECT_NAME)" -v -o ../bin/release/$(GOOS)/x86/$(OUTFILE) ./main.go $(TO_NUL) || echo Go Build returned a non-zero status code
 
 build-release-x64: vendor
 	$(eval GOARCH := amd64)
 	$(info Go Release Build For is now set to: $(GOOS)/$(GOARCH) -> $(CURDIR)/bin/release/$(GOOS)/x64/$(OUTFILE))
-	@cd ./src && export CGO_ENABLED=1&& export GOARCH=$(GOARCH)&& export GOOS=$(GOOS)&& go build -mod=vendor -ldflags "-s -w -X main.commitSha=$(IMAGE_TAG) -X main.buildMode=release -X main.applicationName=$(PROJECT_NAME)" -v -o ../bin/release/$(GOOS)/x64/$(OUTFILE) ./main.go $(TO_NUL) || echo Go Build returned a non-zero status code
+	@cd ./src && export GOARCH=$(GOARCH)&& export GOOS=$(GOOS)&& go build -mod=vendor -ldflags "-s -w -X main.commitSha=$(IMAGE_TAG) -X main.buildMode=release -X main.applicationName=$(PROJECT_NAME)" -v -o ../bin/release/$(GOOS)/x64/$(OUTFILE) ./main.go $(TO_NUL) || echo Go Build returned a non-zero status code
 
 build-release-arm: vendor
 	$(eval GOARCH := arm)
 	$(info Go Release Build For is now set to: $(GOOS)/$(GOARCH) -> $(CURDIR)/bin/release/$(GOOS)/arm/$(OUTFILE))
-	@cd ./src && export CGO_ENABLED=1&& export GOARCH=$(GOARCH)&& export GOOS=$(GOOS)&& go build -mod=vendor -ldflags "-s -w -X main.commitSha=$(IMAGE_TAG) -X main.buildMode=release -X main.applicationName=$(PROJECT_NAME)" -v -o ../bin/release/$(GOOS)/arm/$(OUTFILE) ./main.go $(TO_NUL) || echo Go Build returned a non-zero status code
+	@cd ./src && export GOARCH=$(GOARCH)&& export GOOS=$(GOOS)&& go build -mod=vendor -ldflags "-s -w -X main.commitSha=$(IMAGE_TAG) -X main.buildMode=release -X main.applicationName=$(PROJECT_NAME)" -v -o ../bin/release/$(GOOS)/arm/$(OUTFILE) ./main.go $(TO_NUL) || echo Go Build returned a non-zero status code
 
 build-release-arm64: vendor
 	$(eval GOARCH := arm64)
 	$(info Go Release Build For is now set to: $(GOOS)/$(GOARCH) -> $(CURDIR)/bin/release/$(GOOS)/arm64/$(OUTFILE))
-	@cd ./src && export CGO_ENABLED=1&& export GOARCH=$(GOARCH)&& export GOOS=$(GOOS)&& go build -mod=vendor -ldflags "-s -w -X main.commitSha=$(IMAGE_TAG) -X main.buildMode=release -X main.applicationName=$(PROJECT_NAME)" -v -o ../bin/release/$(GOOS)/arm64/$(OUTFILE) ./main.go $(TO_NUL) || echo Go Build returned a non-zero status code
+	@cd ./src && export GOARCH=$(GOARCH)&& export GOOS=$(GOOS)&& go build -mod=vendor -ldflags "-s -w -X main.commitSha=$(IMAGE_TAG) -X main.buildMode=release -X main.applicationName=$(PROJECT_NAME)" -v -o ../bin/release/$(GOOS)/arm64/$(OUTFILE) ./main.go $(TO_NUL) || echo Go Build returned a non-zero status code
 
 build-debug: vendor
 	$(info Go Debug Build For is now set to: $(GOOS)/$(GOARCH) -> $(CURDIR)/bin/debug/$(GOOS)/$(ARCH_OUT)/$(OUTFILE))
-	@cd ./src && export CGO_ENABLED=1&& go build -mod=vendor -ldflags "-X main.commitSha=$(IMAGE_TAG) -X main.buildMode=debug -X main.applicationName=$(PROJECT_NAME)" -v -o ../bin/debug/$(GOOS)/$(ARCH_OUT)/$(OUTFILE) ./main.go $(TO_NUL) || echo Go Build returned a non-zero status code
+	@cd ./src && go build -mod=vendor -ldflags "-X main.commitSha=$(IMAGE_TAG) -X main.buildMode=debug -X main.applicationName=$(PROJECT_NAME)" -v -o ../bin/debug/$(GOOS)/$(ARCH_OUT)/$(OUTFILE) ./main.go $(TO_NUL) || echo Go Build returned a non-zero status code
 
 build-release: vendor
 	$(info Go Release Build For is now set to: $(GOOS)/$(GOARCH) -> $(CURDIR)/bin/release/$(GOOS)/$(ARCH_OUT)/$(OUTFILE))
-	@cd ./src && export CGO_ENABLED=1&& go build -mod=vendor -ldflags "-s -w -X main.commitSha=$(IMAGE_TAG) -X main.buildMode=release -X main.applicationName=$(PROJECT_NAME)" -v -o ../bin/release/$(GOOS)/$(ARCH_OUT)/$(OUTFILE) ./main.go $(TO_NUL) || echo Go Build returned a non-zero status code
+	@cd ./src && go build -mod=vendor -ldflags "-s -w -X main.commitSha=$(IMAGE_TAG) -X main.buildMode=release -X main.applicationName=$(PROJECT_NAME)" -v -o ../bin/release/$(GOOS)/$(ARCH_OUT)/$(OUTFILE) ./main.go $(TO_NUL) || echo Go Build returned a non-zero status code
 
 build-debug-all: build-debug-x86 build-debug-x64 build-debug-arm build-debug-arm64
 build-release-all: build-release-x86 build-release-x64 build-release-arm build-release-arm64
