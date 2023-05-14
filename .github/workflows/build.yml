@@ -15,6 +15,7 @@ on:
 env:
   PROJECT_NAME: 's3-forcer'
 
+  
 jobs:
   lint:
     name: Go lint
