@@ -65,39 +65,51 @@ jobs:
         run: mkdir -p ${GITHUB_WORKSPACE}/build/${{ matrix.os }}/ && cd bin/${{ matrix.config }}/${{ matrix.os }}/${{ matrix.arch }} && zip -r ${GITHUB_WORKSPACE}/build/${{ matrix.os }}/${{ env.PROJECT_NAME }}-${{ matrix.config }}-${{ matrix.arch }}-${{ matrix.os }}.zip *
 
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ env.PROJECT_NAME }}-${{ matrix.config }}-${{ matrix.arch }}-${{ matrix.os }}
           path: |
             build/${{ matrix.os }}/${{ env.PROJECT_NAME }}-${{ matrix.config }}-${{ matrix.arch }}-${{ matrix.os }}.zip
   
         
-  # release:
-  #   name: Release
-  #   needs: build
-  #   runs-on: ubuntu-latest
+  release:
+    name: Release
+    needs: build
+    runs-on: ubuntu-latest
 
-  #   strategy:
-  #     fail-fast: true
+    strategy:
+      fail-fast: true
 
-  #   steps:
-  #   - name: Download  Artifacts
-  #     uses: actions/download-artifact@v2
-  #     with:
-  #       name: ${{ env.PROJECT_NAME }}
-  #       path: build
+    steps:
+    - name: Download All Artifacts
+      run: |
+        run_id=$(echo "${{ github.event.workflow_run.id }}")
+        job_id=$(echo "${{ github.job }}")
+        artifacts=$(curl -sH "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                      "https://api.github.com/repos/${{ github.repository }}/actions/runs/${run_id}/jobs/${job_id}/artifacts" \
+                      | jq -r '.artifacts[].name')
+        for artifact in $artifacts; do
+          echo "Downloading artifact: $artifact"
+          actions/download-artifact@v2
+            with:
+              name: $artifact
+              path: build
+        done
 
-  #   - name: Create Release
-  #     id: create_release
-  #     uses: softprops/action-gh-release@v1
-  #     env:
-  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #     with:
-  #       tag_name: build-${{github.run_id}}
-  #       generate_release_notes: true
-  #       draft: false
-  #       prerelease: ${{ github.ref_name != 'master' }}
-  #       files: |
-  #         linux/linux-app.zip
-  #         windows/windows-app.zip
-  #         darwin/darwin-app.zip
+    - name: Print
+      run: ls build
+    
+    # - name: Create Release
+    #   id: create_release
+    #   uses: softprops/action-gh-release@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     tag_name: build-${{github.run_id}}
+    #     generate_release_notes: true
+    #     draft: false
+    #     prerelease: ${{ github.ref_name != 'master' }}
+    #     files: |
+    #       linux/linux-app.zip
+    #       windows/windows-app.zip
+    #       darwin/darwin-app.zip
