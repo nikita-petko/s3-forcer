@@ -2,6 +2,10 @@
 
 Brute forcer for channel names on Roblox's S3 client server.
 
+## Original
+
+This is a rework of the following repository: [regginator/s3forcer](https://github.com/regginator/s3forcer)
+
 ## Running
 
 This repository provides [releases](https://github.com/nikita-petko/s3-forcer/releases) and [docker images](https://hub.docker.com/repository/docker/mfdlabs/s3-forcer)
