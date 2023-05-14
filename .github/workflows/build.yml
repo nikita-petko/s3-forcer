@@ -86,20 +86,15 @@ jobs:
       with:
         path: build
 
-    - name: list
-      run: ls -R build
-
-    # - name: Create Release
-    #   id: create_release
-    #   uses: softprops/action-gh-release@v1
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     tag_name: build-${{github.run_id}}
-    #     generate_release_notes: true
-    #     draft: false
-    #     prerelease: ${{ github.ref_name != 'master' }}
-    #     files: |
-    #       linux/linux-app.zip
-    #       windows/windows-app.zip
-    #       darwin/darwin-app.zip
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: build-${{github.run_id}}
+        generate_release_notes: true
+        draft: false
+        prerelease: ${{ github.ref_name != 'master' }}
+        files: |
+          build/*/*.zip
