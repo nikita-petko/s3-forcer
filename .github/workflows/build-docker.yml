@@ -19,7 +19,7 @@ on:
       image:
         description: 'Image Name'
         required: true
-        default: 'nikita-petko/s3-forcer'
+        default: 'mfdlabs/s3-forcer'
       company:
         description: 'The name of the project company.'
         required: true
@@ -41,10 +41,10 @@ jobs:
     # If DOCKER_REGISTRY is not set, default to docker.io
     env:
       DOCKER_REGISTRY: ${{ github.event.inputs.registry || secrets.DOCKER_REGISTRY || 'docker.io' }}
-      IMAGE_NAME: ${{ github.event.inputs.image || secrets.IMAGE_NAME || 'mfdlabs/ns1-github-comparator' }}
+      IMAGE_NAME: ${{ github.event.inputs.image || secrets.IMAGE_NAME || 'mfdlabs/s3-forcer' }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      COMPANY_NAME: ${{ github.events.inputs.company || 'nikita-petko' }}
+      COMPANY_NAME: ${{ github.events.inputs.company || 'mfdlabs' }}
       PROJECT_NAME: ${{ github.events.inputs.project || 's3-forcer' }}
 
     # Pushes 2 identical images to the registry, one with the tag latest and one with the version from git-ref
