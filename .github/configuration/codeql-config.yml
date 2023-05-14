@@ -1,0 +1,4 @@
+name: "Code QL Configuration"
+
+paths:
+    - ./src

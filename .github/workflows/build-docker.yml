@@ -1,0 +1,86 @@
+name: 'Build Docker Image'
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "Dockerfile"
+      - "src/**"
+      - ".github/workflows/**"
+
+  # Allows you to run this workflow manually from the Actions tab. We can override the branch, image name, and docker registry.
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'The Git ref to use if you require a specific commit.'
+        required: false
+        default: ''
+      image:
+        description: 'Image Name'
+        required: true
+        default: 'nikita-petko/s3-forcer'
+      company:
+        description: 'The name of the project company.'
+        required: true
+        default: 'nikita-petko'
+      project:
+        description: 'The name of the project'
+        required: true
+        default: 's3-forcer'
+      registry:
+        description: 'Docker Registry'
+        required: true
+        default: 'docker.io'
+
+jobs:
+  build:
+    if: "!contains(github.event.head_commit.message, '[SKIP IMAGE]')"
+    runs-on: ubuntu-latest
+
+    # If DOCKER_REGISTRY is not set, default to docker.io
+    env:
+      DOCKER_REGISTRY: ${{ github.event.inputs.registry || secrets.DOCKER_REGISTRY || 'docker.io' }}
+      IMAGE_NAME: ${{ github.event.inputs.image || secrets.IMAGE_NAME || 'mfdlabs/ns1-github-comparator' }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      COMPANY_NAME: ${{ github.events.inputs.company || 'nikita-petko' }}
+      PROJECT_NAME: ${{ github.events.inputs.project || 's3-forcer' }}
+
+    # Pushes 2 identical images to the registry, one with the tag latest and one with the version from git-ref
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.ref || github.ref }}
+
+      # Error if IMAGE_NAME is not set
+      - name: Check IMAGE_NAME
+        run: |
+          if [ -z "$IMAGE_NAME" ]; then
+            echo "IMAGE_NAME is not set"
+            exit 1
+          fi
+
+      # Error if DOCKER_USERNAME is not set
+      - name: Check DOCKER_USERNAME
+        run: |
+          if [ -z "$DOCKER_USERNAME" ]; then
+            echo "DOCKER_USERNAME is not set"
+            exit 1
+          fi
+
+      # Error if DOCKER_PASSWORD is not set
+      - name: Check DOCKER_PASSWORD
+        run: |
+          if [ -z "$DOCKER_PASSWORD" ]; then
+            echo "DOCKER_PASSWORD is not set"
+            exit 1
+          fi
+          
+      # Login to the registry
+      - name: Login to registry
+        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login ${{ env.DOCKER_REGISTRY }} -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+      # Push the image to the registry
+      - name: Build & Push the image
+        run: make build-docker IMAGE_NAME=${{ env.IMAGE_NAME }} COMPANY_NAME=${{ env.COMPANY_NAME }} PROJECT_NAME=${{ env.PROJECT_NAME }} CI=true

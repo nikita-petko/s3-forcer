@@ -6,7 +6,9 @@ else
 	TO_NUL :=
 endif
 
+COMPANY_NAME ?= mfdlabs
 PROJECT_NAME ?= $(notdir $(CURDIR))
+IMAGE_NAME ?= $(COMPANY_NAME)/$(PROJECT_NAME)
 
 ifeq ($(OS),Windows_NT)
 	SETC := SET
@@ -66,6 +68,8 @@ all:
 	$(info commands:)
 	$(info )
 	$(info  vendor               - compile the vendor paths.)
+	$(info  test                 - run all unit tests.)
+	$(info  build-docker         - build a docker image, IMAGE_NAME will default to $(COMPANY_NAME)/$(PROJECT_NAME) if not specified!)
 	$(info  build-debug          - build a debug build. If GOARCH or GOOS were not specified "$(GOOS)/$(GOARCH)" will be used.)
 	$(info  build-release        - build a release build that strips all symbols. If GOARCH or GOOS were not specified, "$(GOOS)/$(GOARCH)" will be used.)
 	$(info  build-debug-<arch>   - helper for building a debug build for a specific arch, <arch> can be either x86, x64, arm or arm64. If GOOS was not specified, "$(GOOS)" will be used.)
@@ -133,3 +137,28 @@ build-release: vendor
 build-debug-all: build-debug-x86 build-debug-x64 build-debug-arm build-debug-arm64
 build-release-all: build-release-x86 build-release-x64 build-release-arm build-release-arm64
 
+build-docker:
+ifndef IMAGE_NAME
+	$(info IMAGE_NAME is not defined)
+else
+ifndef COMPANY_NAME
+	$(info COMPANY_NAME is not defined)
+else
+ifndef PROJECT_NAME
+	$(info PROJECT_NAME is not defined)
+else
+	@docker build --build-arg PROJECT_NAME=$(PROJECT_NAME) -t $(IMAGE_NAME):$(IMAGE_TAG) -f Dockerfile .
+	@docker tag $(IMAGE_NAME):$(IMAGE_TAG) $(IMAGE_NAME):latest
+
+ifdef CI
+	@docker push $(IMAGE_NAME):$(IMAGE_TAG)
+	@docker push $(IMAGE_NAME):latest
+endif
+
+ifndef KEEP_IMAGES
+	@docker rmi $(IMAGE_NAME):$(IMAGE_TAG)
+	@docker rmi $(IMAGE_NAME):latest
+endif
+endif
+endif
+endif

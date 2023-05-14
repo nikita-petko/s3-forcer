@@ -15,7 +15,7 @@ var setupOnce sync.Once
 func SetupFlags(applicationName, buildMode, commitSha string) {
 	setupOnce.Do(func() {
 		flag.Usage = func() {
-			os.Stderr.WriteString(fmt.Sprintf("Usage: %s_%s-%s %s\n\n", applicationName, buildMode, commitSha, FlagsUsageString))
+			os.Stderr.WriteString(fmt.Sprintf("Usage: %s\nBuild Mode: %s\nCommit: %s %s\n\n", applicationName, buildMode, commitSha, FlagsUsageString))
 			flag.PrintDefaults()
 		}
 

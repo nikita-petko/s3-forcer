@@ -28,7 +28,8 @@ func ReadFromS3(channelCombination string) {
 
 	resp, err := s3HttpClient.Head(url)
 	if err != nil {
-		glog.Fatalf("Error when sending request to S3: %v.", err)
+		glog.Errorf("Error when sending request to S3: %v.", err)
+		return
 	}
 
 	if resp.StatusCode == 200 {
