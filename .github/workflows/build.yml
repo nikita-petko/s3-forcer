@@ -12,6 +12,9 @@ on:
       - "src/**"
       - ".github/workflows/**"
 
+env:
+  PROJECT_NAME: 's3-forcer'
+
 jobs:
   lint:
     name: Go lint
@@ -54,4 +57,45 @@ jobs:
 
       - name: Run the build-<config>-<arch> make target
         run: make build-${{ matrix.config }}-${{ matrix.arch }} GOOS=${{ matrix.os }}
+
+
+      - name: Create zip file
+        run: cd bin/${{ matrix.config }}/${{ matrix.os }}/${{ matrix.arch }} && zip -r ${GITHUB_WORKSPACE}/build/${{ matrix.os }}/${{ env.PROJECT_NAME }}-${{ matrix.config }}-${{ matrix.arch }}-${{ matrix.os }}.zip *
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.PROJECT_NAME }}-${{ matrix.config }}-${{ matrix.arch }}-${{ matrix.os }}
+          path: |
+            build/${{ matrix.os }}/${{ env.PROJECT_NAME }}-${{ matrix.config }}-${{ matrix.arch }}-${{ matrix.os }}.zip
+  
         
+  # release:
+  #   name: Release
+  #   needs: build
+  #   runs-on: ubuntu-latest
+
+  #   strategy:
+  #     fail-fast: true
+
+  #   steps:
+  #   - name: Download  Artifacts
+  #     uses: actions/download-artifact@v2
+  #     with:
+  #       name: ${{ env.PROJECT_NAME }}
+  #       path: build
+
+  #   - name: Create Release
+  #     id: create_release
+  #     uses: softprops/action-gh-release@v1
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     with:
+  #       tag_name: build-${{github.run_id}}
+  #       generate_release_notes: true
+  #       draft: false
+  #       prerelease: ${{ github.ref_name != 'master' }}
+  #       files: |
+  #         linux/linux-app.zip
+  #         windows/windows-app.zip
+  #         darwin/darwin-app.zip
