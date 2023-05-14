@@ -56,12 +56,11 @@ jobs:
           go-version: 1.20.x
 
       - name: Run the build-<config>-<arch> make target
-        run: make build-${{ matrix.config }}-${{ matrix.arch }} GOOS=${{ matrix.os }}
+        run: make build-${{ matrix.config }}-${{ matrix.arch }} GOOS=${{ matrix.os }} WITH_STDERR=1
 
 
       - name: Create zip file
-        #run: zip -r ${GITHUB_WORKSPACE}/build/${{ matrix.os }}/${{ env.PROJECT_NAME }}-${{ matrix.config }}-${{ matrix.arch }}-${{ matrix.os }}.zip ${GITHUB_WORKSPACE}/bin/${{ matrix.config }}/${{ matrix.os }}/${{ matrix.arch }}/*
-        run: ls ${GITHUB_WORKSPACE}/bin/${{ matrix.config }}/${{ matrix.os }}/${{ matrix.arch }}
+        run: cd bin/${{ matrix.config }}/${{ matrix.os }}/${{ matrix.arch }} && zip -r ${GITHUB_WORKSPACE}/build/${{ matrix.os }}/${{ env.PROJECT_NAME }}-${{ matrix.config }}-${{ matrix.arch }}-${{ matrix.os }}.zip *
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
