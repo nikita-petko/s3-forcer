@@ -87,7 +87,7 @@ jobs:
         path: build
 
     - name: list
-      run: ls build
+      run: ls -R build
 
     # - name: Create Release
     #   id: create_release
