@@ -6,11 +6,16 @@ import (
 	"os"
 
 	"github.com/golang/glog"
+	"github.com/nikita-petko/s3-forcer/flags"
 	"github.com/nikita-petko/s3-forcer/metrics"
 )
 
 // FlushCache flushes all memory cached values to the cache file.
 func FlushCache() {
+	if !*flags.UseCache {
+		return
+	}
+
 	file, _ := os.OpenFile(computeCacheFileName(), os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
 	defer file.Close()
 
@@ -20,8 +25,8 @@ func FlushCache() {
 	w := bufio.NewWriter(file)
 
 	data := &cachedData{
-		Positions: positions,
-		Channels:  channels,
+		Positions: *positions,
+		Channels:  *channels,
 	}
 
 	b, err := json.Marshal(data)
@@ -40,16 +45,22 @@ func RegisterChannel(channel string) {
 
 	glog.Infof("Registered new channel %s", channel)
 
-	channels = append(channels, channel)
+	if *flags.UseCache {
+		*channels = append(*channels, channel)
+	}
 }
 
 // PositionExists checks if the specified postion exists.
 func PositionExists(length string) (exists bool, pos uint64) {
-	if len(positions) == 0 {
+	if !*flags.UseCache {
 		return false, 0
 	}
 
-	for k, v := range positions {
+	if len(*positions) == 0 {
+		return false, 0
+	}
+
+	for k, v := range *positions {
 		if k == length {
 			return true, v
 		}
@@ -60,16 +71,22 @@ func PositionExists(length string) (exists bool, pos uint64) {
 
 // SetCachedPosition sets the cached lstr value.
 func SetCachedPostion(lstr string, position uint64) {
-	positions[lstr] = position
+	if *flags.UseCache {
+		(*positions)[lstr] = position
+	}
 }
 
 // ChannelExists checks if the specified channel exists in the cache.
 func ChannelExists(channel string) (exists bool) {
-	if len(channels) == 0 {
+	if !*flags.UseCache {
 		return false
 	}
 
-	for _, v := range channels {
+	if len(*channels) == 0 {
+		return false
+	}
+
+	for _, v := range *channels {
 		if v == channel {
 			return true
 		}

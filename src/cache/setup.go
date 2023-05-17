@@ -12,8 +12,8 @@ import (
 
 var (
 	setupOnce sync.Once
-	positions map[string]uint64 = map[string]uint64{}
-	channels  []string          = []string{}
+	positions *map[string]uint64 = nil
+	channels  *[]string          = nil
 
 	defaultData *cachedData = &cachedData{Positions: map[string]uint64{}, Channels: []string{}}
 )
@@ -23,6 +23,15 @@ var (
 // once.
 func SetupCache() {
 	setupOnce.Do(func() {
+		if !*flags.UseCache {
+			glog.Warning("Caching is disabled.")
+
+			return
+		}
+
+		positions = new(map[string]uint64)
+		channels = new([]string)
+
 		var (
 			fi  fs.FileInfo
 			err error
@@ -66,7 +75,7 @@ func SetupCache() {
 			glog.Fatal(err)
 		}
 
-		positions = data.Positions
-		channels = data.Channels
+		*positions = data.Positions
+		*channels = data.Channels
 	})
 }

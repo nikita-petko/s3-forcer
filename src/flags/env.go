@@ -7,6 +7,8 @@ func applyEnvironmentVariableFlags() {
 	getEnvironmentVariableOrFlag("ATTEMPT_MILESTONE", AttemptMilestone)
 	getEnvironmentVariableOrFlag("USE_S3_DIRECTLY", UseS3Directly)
 	getEnvironmentVariableOrFlag("WORKER_THREADS", WorkerThreads)
+	getEnvironmentVariableOrFlag("S3_CLIENT_TIMEOUT", S3ClientTimeout)
+	getEnvironmentVariableOrFlag("USE_CACHE", UseCache)
 
 	getEnvironmentVariableOrFlag("SEND_GRID_API_KEY", SendGridApiKey)
 	getEnvironmentVariableOrFlag("SEND_GRID_FROM", SendGridFrom)

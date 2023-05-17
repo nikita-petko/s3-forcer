@@ -36,6 +36,9 @@ var (
 	// S3ClientTimeout is the timeout for the S3 HTTP client when receiving a response. (environment variable: S3_CLIENT_TIMEOUT)
 	S3ClientTimeout = flag.Duration("s3-client-timeout", time.Second*30, "The timeout for the S3 HTTP client when receiving a response. (environment variable: S3_CLIENT_TIMEOUT)")
 
+	// UseCache determines if objects should be cached or not, or the cache should be read from. (environment variable: USE_CACHE)
+	UseCache = flag.Bool("use-cache", true, "UseCache determines if objects should be cached or not, or the cache should be read from. (environment variable: USE_CACHE)")
+
 	// Alerting
 
 	// SendGridApiKey is the SendGrid API key. This is optional. (environment variable: SENDGRID_API_KEY)
@@ -61,8 +64,8 @@ var (
 )
 
 const FlagsUsageString string = `
-	[-h|--help] [--min-length[=1]] [--char-combinations[=abcdefghijklmnopqrstuvwxyz1]] [--channel-prefix[=z]]
-	[--invalidate-cache] [--attempt-milestone[=5000]] [--use-s3-directly] [--workers-threads[=250]]
+	[-h|--help] [--min-length[=1]] [--char-combinations[=abcdefghijklmnopqrstuvwxyz1]] [--channel-prefix[=z]] [--invalidate-cache]
+	[--attempt-milestone[=5000]] [--use-s3-directly] [--workers-threads[=250]] [--s3-client-timeout[=30s]] [--use-cache]
 	[--sendgrid-api-key[=]] [--sendgrid-from[=]] [--sendgrid-from-email[=]] [--sendgrid-mailing-list[=]]
 	[--sns-topic-arn[=]] [--aws-credentials-from-profile]
 	[--discord-webhook-uri[=]]`
