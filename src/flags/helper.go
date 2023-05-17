@@ -6,8 +6,7 @@ import (
 	"time"
 )
 
-// Reassigns a flag if an enviornment variable is present.
-func GetEnvironmentVariableOrFlag(name string, flag interface{}) error {
+func getEnvironmentVariableOrFlag(name string, flag interface{}) error {
 	if env, ok := os.LookupEnv(name); ok {
 		var err error = nil
 		switch v := flag.(type) {

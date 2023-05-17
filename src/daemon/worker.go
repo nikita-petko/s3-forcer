@@ -27,13 +27,7 @@ func doWork(ctx context.Context, sem *semaphore.Weighted, charlen, length *int, 
 	if exists, pos := cache.PositionExists(lenstr); exists {
 		glog.Infof("Starting at cached position of %d", pos)
 
-		for range channelNames {
-			if currentAttempt > pos {
-				break
-			}
-
-			currentAttempt++
-		}
+		currentAttempt = pos
 	}
 
 	for _, channel := range channelNames {
