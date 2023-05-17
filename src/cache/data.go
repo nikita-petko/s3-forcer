@@ -44,7 +44,7 @@ func RegisterChannel(channel string) {
 }
 
 // PositionExists checks if the specified postion exists.
-func PositionExists(length string) (exists bool, pos int) {
+func PositionExists(length string) (exists bool, pos uint64) {
 	if len(positions) == 0 {
 		return false, 0
 	}
@@ -59,7 +59,7 @@ func PositionExists(length string) (exists bool, pos int) {
 }
 
 // SetCachedPosition sets the cached lstr value.
-func SetCachedPostion(lstr string, position int) {
+func SetCachedPostion(lstr string, position uint64) {
 	positions[lstr] = position
 }
 

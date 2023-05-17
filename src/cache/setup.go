@@ -12,10 +12,10 @@ import (
 
 var (
 	setupOnce sync.Once
-	positions map[string]int = map[string]int{}
-	channels  []string       = []string{}
+	positions map[string]uint64 = map[string]uint64{}
+	channels  []string          = []string{}
 
-	defaultData *cachedData = &cachedData{Positions: map[string]int{}, Channels: []string{}}
+	defaultData *cachedData = &cachedData{Positions: map[string]uint64{}, Channels: []string{}}
 )
 
 // SetupCache sets up the caching environment

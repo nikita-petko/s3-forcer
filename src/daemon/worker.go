@@ -14,15 +14,15 @@ import (
 	"golang.org/x/sync/semaphore"
 )
 
-func doWork(ctx context.Context, sem *semaphore.Weighted, charlen, length *int, chars []interface{}) {
+func doWork(ctx context.Context, sem *semaphore.Weighted, charlen, length *uint64, chars []interface{}) {
 	glog.Infof("Starting attempts @ %d chars (max attempts: %d)", *length, int64(math.Pow(float64(*charlen), float64(*length))))
 	t := time.Now()
 
 	channelNames := joinTogether(itertools.Product(*length, chars))
 
-	currentAttempt := 1
+	currentAttempt := uint64(1)
 
-	lenstr := strconv.Itoa(*length)
+	lenstr := strconv.FormatUint(*length, 10)
 
 	if exists, pos := cache.PositionExists(lenstr); exists {
 		glog.Infof("Starting at cached position of %d", pos)

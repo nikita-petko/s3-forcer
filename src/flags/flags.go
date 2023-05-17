@@ -13,7 +13,7 @@ var (
 	HelpFlag = flag.Bool("help", false, "Print usage.")
 
 	// MinLength is the minimum character length of channel name combinations to bruteforce. (enviornment variable: MIN_CHANNEL_LENGTH)
-	MinLength = flag.Int("min-length", 1, "Minimum character length of channel name combinations to bruteforce. (enviornment variable: MIN_CHANNEL_LENGTH)")
+	MinLength = flag.Uint64("min-length", 1, "Minimum character length of channel name combinations to bruteforce. (enviornment variable: MIN_CHANNEL_LENGTH)")
 
 	// CharCombinations are the characters (in a single string) to use for channel name combinations. (environment variable: CHANNEL_CHAR_COMBINATIONS)
 	CharCombinations = flag.String("char-combinations", "abcdefghijklmnopqrstuvwxyz1", "Characters (in a single string) to use for channel name combinations. (environment variable: CHANNEL_CHAR_COMBINATIONS)")
@@ -25,7 +25,7 @@ var (
 	InvalidateCache = flag.Bool("invalidate-cache", false, "Should the cache be invalidated on cache initialization.")
 
 	// AttemptMilestone is the number of attempts between cache writes and milestone prints. (enviornment variable: ATTEMPT_MILESTONE)
-	AttemptMilestone = flag.Int("attempt-milestone", 5000, "Number of attempts between cache writes and milestone prints. (enviornment variable: ATTEMPT_MILESTONE)")
+	AttemptMilestone = flag.Uint64("attempt-milestone", 5000, "Number of attempts between cache writes and milestone prints. (enviornment variable: ATTEMPT_MILESTONE)")
 
 	// UseS3Directly uses s3.amazonaws.com instead of the rbx-cdn-provider (rbxcdn.com.) (environment variable: USE_S3_DIRECTLY)
 	UseS3Directly = flag.Bool("use-s3-directly", false, "Should we use S3 directly instead of the rbx-cdn-provider. (environment variable: USE_S3_DIRECTLY)")

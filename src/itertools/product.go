@@ -10,12 +10,12 @@ package itertools
 //
 // To compute the product of an iterable with itself, specify the number of repetitions with the optional repeat keyword argument.
 // For example, product(4, A) means the same as product(A, A, A, A).
-func Product(repeat int, args ...[]interface{}) [][]interface{} {
+func Product(repeat uint64, args ...[]interface{}) [][]interface{} {
 	// product('ABCD', 'xy') --> Ax Ay Bx By Cx Cy Dx Dy
 	// product(range(2), repeat=3) --> 000 001 010 011 100 101 110 111
 	var pools [][]interface{}
 	for _, pool := range args {
-		for i := 0; i < repeat; i++ {
+		for i := uint64(0); i < repeat; i++ {
 			pools = append(pools, pool)
 		}
 	}
