@@ -11,7 +11,7 @@ import (
 )
 
 // ReadFromS3 reads from S3 using the channel
-// version file via a HTTP HEAD to reduce overhead.
+// deploy history file via a HTTP HEAD to reduce overhead.
 func ReadFromS3(channelCombination string) {
 	channel := *flags.ChannelPrefix + channelCombination
 	if cache.ChannelExists(channel) {
@@ -19,9 +19,9 @@ func ReadFromS3(channelCombination string) {
 		return
 	}
 
-	format := rbxCdnProviderPerChannelVersion
+	format := rbxCdnProviderPerChannelDeployHistory
 	if *flags.UseS3Directly {
-		format = s3PerChannelVersion
+		format = s3PerChannelDeployHistory
 	}
 
 	url := fmt.Sprintf(format, channel)

@@ -10,10 +10,8 @@ const (
 	s3PerChannelBasePath          string = s3BasePath + "channel/%s/"
 )
 
-// Version
-
 const (
-	versionFile                     string = "version"
-	rbxCdnProviderPerChannelVersion string = rbxCdnProviderChannelBasePath + versionFile
-	s3PerChannelVersion             string = s3PerChannelBasePath + versionFile
+	deployHistoryFile                     string = "DeployHistory.txt"
+	rbxCdnProviderPerChannelDeployHistory string = rbxCdnProviderChannelBasePath + deployHistoryFile
+	s3PerChannelDeployHistory             string = s3PerChannelBasePath + deployHistoryFile
 )
