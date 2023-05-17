@@ -2,6 +2,7 @@ package flags
 
 import (
 	"flag"
+	"time"
 )
 
 var (
@@ -31,6 +32,9 @@ var (
 
 	// WorkerThreads is the number of max semaphore thread workers to use. (environment variable: WORKER_THREADS)
 	WorkerThreads = flag.Int64("worker-threads", 250, "Number of max thread workers to use. (environment variable: WORKER_THREADS)")
+
+	// S3ClientTimeout is the timeout for the S3 HTTP client when receiving a response. (environment variable: S3_CLIENT_TIMEOUT)
+	S3ClientTimeout = flag.Duration("s3-client-timeout", time.Second*30, "The timeout for the S3 HTTP client when receiving a response. (environment variable: S3_CLIENT_TIMEOUT)")
 
 	// Alerting
 

@@ -3,7 +3,8 @@ package s3
 import (
 	"net/http"
 	"sync"
-	"time"
+
+	"github.com/nikita-petko/s3-forcer/flags"
 )
 
 var (
@@ -16,6 +17,6 @@ var (
 func SetupS3Client() {
 	setupOnce.Do(func() {
 		s3HttpClient = http.DefaultClient
-		s3HttpClient.Timeout = 15 * time.Second
+		s3HttpClient.Timeout = *flags.S3ClientTimeout
 	})
 }
