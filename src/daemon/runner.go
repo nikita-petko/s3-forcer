@@ -18,7 +18,7 @@ func Run() {
 	runOnce.Do(func() {
 		ctx := context.Background()
 		sem := semaphore.NewWeighted(*flags.WorkerThreads)
-		charlen := len(*flags.CharCombinations)
+		charlen := uint64(len(*flags.CharCombinations))
 		length := *flags.MinLength
 		chars := getChars()
 
