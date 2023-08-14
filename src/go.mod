@@ -8,7 +8,7 @@ require (
 	github.com/golang/glog v1.1.1
 	github.com/gorilla/mux v1.8.0
 	github.com/prometheus/client_golang v1.16.0
-	github.com/sendgrid/sendgrid-go v3.12.0+incompatible
+	github.com/sendgrid/sendgrid-go v3.13.0+incompatible
 	golang.org/x/sync v0.2.0
 )
 
