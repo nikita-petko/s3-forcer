@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/aws/aws-sdk-go-v2/config v1.18.27
 	github.com/aws/aws-sdk-go-v2/service/sns v1.20.11
-	github.com/golang/glog v1.1.1
+	github.com/golang/glog v1.1.2
 	github.com/gorilla/mux v1.8.0
 	github.com/prometheus/client_golang v1.16.0
 	github.com/sendgrid/sendgrid-go v3.12.0+incompatible
