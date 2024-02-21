@@ -142,8 +142,8 @@ github.com/sendgrid/sendgrid-go
 github.com/sendgrid/sendgrid-go/helpers/mail
 # github.com/stretchr/testify v1.8.4
 ## explicit; go 1.20
-# golang.org/x/sync v0.3.0
-## explicit; go 1.17
+# golang.org/x/sync v0.6.0
+## explicit; go 1.18
 golang.org/x/sync/semaphore
 # golang.org/x/sys v0.11.0
 ## explicit; go 1.17
