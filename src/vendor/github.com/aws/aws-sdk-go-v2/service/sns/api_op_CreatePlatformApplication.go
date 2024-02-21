@@ -4,6 +4,7 @@ package sns
 
 import (
 	"context"
+	"fmt"
 	awsmiddleware "github.com/aws/aws-sdk-go-v2/aws/middleware"
 	"github.com/aws/aws-sdk-go-v2/aws/signer/v4"
 	"github.com/aws/smithy-go/middleware"
@@ -24,8 +25,14 @@ import (
 //     is SSL certificate and PlatformCredential is private key .
 //   - For APNS and APNS_SANDBOX using token credentials, PlatformPrincipal is
 //     signing key ID and PlatformCredential is signing key .
-//   - For GCM (Firebase Cloud Messaging), there is no PlatformPrincipal and the
-//     PlatformCredential is API key .
+//   - For GCM (Firebase Cloud Messaging) using key credentials, there is no
+//     PlatformPrincipal . The PlatformCredential is API key .
+//   - For GCM (Firebase Cloud Messaging) using token credentials, there is no
+//     PlatformPrincipal . The PlatformCredential is a JSON formatted private key
+//     file. When using the Amazon Web Services CLI, the file must be in string format
+//     and special characters must be ignored. To format the file correctly, Amazon SNS
+//     recommends using the following command: SERVICE_JSON=`jq @json <<< cat
+//     service.json` .
 //   - For MPNS , PlatformPrincipal is TLS certificate and PlatformCredential is
 //     private key .
 //   - For WNS , PlatformPrincipal is Package Security Identifier and
@@ -87,12 +94,22 @@ type CreatePlatformApplicationOutput struct {
 }
 
 func (c *Client) addOperationCreatePlatformApplicationMiddlewares(stack *middleware.Stack, options Options) (err error) {
+	if err := stack.Serialize.Add(&setOperationInputMiddleware{}, middleware.After); err != nil {
+		return err
+	}
 	err = stack.Serialize.Add(&awsAwsquery_serializeOpCreatePlatformApplication{}, middleware.After)
 	if err != nil {
 		return err
 	}
 	err = stack.Deserialize.Add(&awsAwsquery_deserializeOpCreatePlatformApplication{}, middleware.After)
 	if err != nil {
+		return err
+	}
+	if err := addProtocolFinalizerMiddlewares(stack, options, "CreatePlatformApplication"); err != nil {
+		return fmt.Errorf("add protocol finalizers: %v", err)
+	}
+
+	if err = addlegacyEndpointContextSetter(stack, options); err != nil {
 		return err
 	}
 	if err = addSetLoggerMiddleware(stack, options); err != nil {
@@ -113,22 +130,22 @@ func (c *Client) addOperationCreatePlatformApplicationMiddlewares(stack *middlew
 	if err = addRetryMiddlewares(stack, options); err != nil {
 		return err
 	}
-	if err = addHTTPSignerV4Middleware(stack, options); err != nil {
-		return err
-	}
 	if err = awsmiddleware.AddRawResponseToMetadata(stack); err != nil {
 		return err
 	}
 	if err = awsmiddleware.AddRecordResponseTiming(stack); err != nil {
 		return err
 	}
-	if err = addClientUserAgent(stack); err != nil {
+	if err = addClientUserAgent(stack, options); err != nil {
 		return err
 	}
 	if err = smithyhttp.AddErrorCloseResponseBodyMiddleware(stack); err != nil {
 		return err
 	}
 	if err = smithyhttp.AddCloseResponseBodyMiddleware(stack); err != nil {
+		return err
+	}
+	if err = addSetLegacyContextSigningOptionsMiddleware(stack); err != nil {
 		return err
 	}
 	if err = addOpCreatePlatformApplicationValidationMiddleware(stack); err != nil {
@@ -149,6 +166,9 @@ func (c *Client) addOperationCreatePlatformApplicationMiddlewares(stack *middlew
 	if err = addRequestResponseLogging(stack, options); err != nil {
 		return err
 	}
+	if err = addDisableHTTPSMiddleware(stack, options); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -156,7 +176,6 @@ func newServiceMetadataMiddleware_opCreatePlatformApplication(region string) *aw
 	return &awsmiddleware.RegisterServiceMetadata{
 		Region:        region,
 		ServiceID:     ServiceID,
-		SigningName:   "sns",
 		OperationName: "CreatePlatformApplication",
 	}
 }

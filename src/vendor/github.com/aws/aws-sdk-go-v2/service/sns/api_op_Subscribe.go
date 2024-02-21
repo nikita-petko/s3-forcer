@@ -4,6 +4,7 @@ package sns
 
 import (
 	"context"
+	"fmt"
 	awsmiddleware "github.com/aws/aws-sdk-go-v2/aws/middleware"
 	"github.com/aws/aws-sdk-go-v2/aws/signer/v4"
 	"github.com/aws/smithy-go/middleware"
@@ -14,7 +15,7 @@ import (
 // or email, or if the endpoint and the topic are not in the same Amazon Web
 // Services account, the endpoint owner must run the ConfirmSubscription action to
 // confirm the subscription. You call the ConfirmSubscription action with the
-// token from the subscription response. Confirmation tokens are valid for three
+// token from the subscription response. Confirmation tokens are valid for two
 // days. This action is throttled at 100 transactions per second (TPS).
 func (c *Client) Subscribe(ctx context.Context, params *SubscribeInput, optFns ...func(*Options)) (*SubscribeOutput, error) {
 	if params == nil {
@@ -85,6 +86,19 @@ type SubscribeInput struct {
 	//   attribute is required for Kinesis Data Firehose delivery stream subscriptions.
 	//   For more information, see Fanout to Kinesis Data Firehose delivery streams (https://docs.aws.amazon.com/sns/latest/dg/sns-firehose-as-subscriber.html)
 	//   in the Amazon SNS Developer Guide.
+	// The following attributes apply only to FIFO topics (https://docs.aws.amazon.com/sns/latest/dg/sns-fifo-topics.html)
+	// :
+	//   - ReplayPolicy – Adds or updates an inline policy document for a subscription
+	//   to replay messages stored in the specified Amazon SNS topic.
+	//   - ReplayStatus – Retrieves the status of the subscription message replay,
+	//   which can be one of the following:
+	//   - Completed – The replay has successfully redelivered all messages, and is now
+	//   delivering newly published messages. If an ending point was specified in the
+	//   ReplayPolicy then the subscription will no longer receive newly published
+	//   messages.
+	//   - In progress – The replay is currently replaying the selected messages.
+	//   - Failed – The replay was unable to complete.
+	//   - Pending – The default state while the replay initiates.
 	Attributes map[string]string
 
 	// The endpoint that you want to receive notifications. Endpoints vary by
@@ -134,12 +148,22 @@ type SubscribeOutput struct {
 }
 
 func (c *Client) addOperationSubscribeMiddlewares(stack *middleware.Stack, options Options) (err error) {
+	if err := stack.Serialize.Add(&setOperationInputMiddleware{}, middleware.After); err != nil {
+		return err
+	}
 	err = stack.Serialize.Add(&awsAwsquery_serializeOpSubscribe{}, middleware.After)
 	if err != nil {
 		return err
 	}
 	err = stack.Deserialize.Add(&awsAwsquery_deserializeOpSubscribe{}, middleware.After)
 	if err != nil {
+		return err
+	}
+	if err := addProtocolFinalizerMiddlewares(stack, options, "Subscribe"); err != nil {
+		return fmt.Errorf("add protocol finalizers: %v", err)
+	}
+
+	if err = addlegacyEndpointContextSetter(stack, options); err != nil {
 		return err
 	}
 	if err = addSetLoggerMiddleware(stack, options); err != nil {
@@ -160,22 +184,22 @@ func (c *Client) addOperationSubscribeMiddlewares(stack *middleware.Stack, optio
 	if err = addRetryMiddlewares(stack, options); err != nil {
 		return err
 	}
-	if err = addHTTPSignerV4Middleware(stack, options); err != nil {
-		return err
-	}
 	if err = awsmiddleware.AddRawResponseToMetadata(stack); err != nil {
 		return err
 	}
 	if err = awsmiddleware.AddRecordResponseTiming(stack); err != nil {
 		return err
 	}
-	if err = addClientUserAgent(stack); err != nil {
+	if err = addClientUserAgent(stack, options); err != nil {
 		return err
 	}
 	if err = smithyhttp.AddErrorCloseResponseBodyMiddleware(stack); err != nil {
 		return err
 	}
 	if err = smithyhttp.AddCloseResponseBodyMiddleware(stack); err != nil {
+		return err
+	}
+	if err = addSetLegacyContextSigningOptionsMiddleware(stack); err != nil {
 		return err
 	}
 	if err = addOpSubscribeValidationMiddleware(stack); err != nil {
@@ -196,6 +220,9 @@ func (c *Client) addOperationSubscribeMiddlewares(stack *middleware.Stack, optio
 	if err = addRequestResponseLogging(stack, options); err != nil {
 		return err
 	}
+	if err = addDisableHTTPSMiddleware(stack, options); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -203,7 +230,6 @@ func newServiceMetadataMiddleware_opSubscribe(region string) *awsmiddleware.Regi
 	return &awsmiddleware.RegisterServiceMetadata{
 		Region:        region,
 		ServiceID:     ServiceID,
-		SigningName:   "sns",
 		OperationName: "Subscribe",
 	}
 }
