@@ -4,6 +4,7 @@ package sns
 
 import (
 	"context"
+	"fmt"
 	awsmiddleware "github.com/aws/aws-sdk-go-v2/aws/middleware"
 	"github.com/aws/aws-sdk-go-v2/aws/signer/v4"
 	"github.com/aws/smithy-go/middleware"
@@ -50,6 +51,10 @@ type GetPlatformApplicationAttributesOutput struct {
 	//   token-based authentication.
 	//   - ApplePlatformBundleID – The app identifier used to configure token-based
 	//   authentication.
+	//   - AuthenticationMethod – Returns the credential type used when sending push
+	//   notifications from application to APNS/APNS_Sandbox, or application to GCM.
+	//   - APNS – Returns the token or certificate.
+	//   - GCM – Returns the token or key.
 	//   - EventEndpointCreated – Topic ARN to which EndpointCreated event
 	//   notifications should be sent.
 	//   - EventEndpointDeleted – Topic ARN to which EndpointDeleted event
@@ -68,12 +73,22 @@ type GetPlatformApplicationAttributesOutput struct {
 }
 
 func (c *Client) addOperationGetPlatformApplicationAttributesMiddlewares(stack *middleware.Stack, options Options) (err error) {
+	if err := stack.Serialize.Add(&setOperationInputMiddleware{}, middleware.After); err != nil {
+		return err
+	}
 	err = stack.Serialize.Add(&awsAwsquery_serializeOpGetPlatformApplicationAttributes{}, middleware.After)
 	if err != nil {
 		return err
 	}
 	err = stack.Deserialize.Add(&awsAwsquery_deserializeOpGetPlatformApplicationAttributes{}, middleware.After)
 	if err != nil {
+		return err
+	}
+	if err := addProtocolFinalizerMiddlewares(stack, options, "GetPlatformApplicationAttributes"); err != nil {
+		return fmt.Errorf("add protocol finalizers: %v", err)
+	}
+
+	if err = addlegacyEndpointContextSetter(stack, options); err != nil {
 		return err
 	}
 	if err = addSetLoggerMiddleware(stack, options); err != nil {
@@ -94,22 +109,22 @@ func (c *Client) addOperationGetPlatformApplicationAttributesMiddlewares(stack *
 	if err = addRetryMiddlewares(stack, options); err != nil {
 		return err
 	}
-	if err = addHTTPSignerV4Middleware(stack, options); err != nil {
-		return err
-	}
 	if err = awsmiddleware.AddRawResponseToMetadata(stack); err != nil {
 		return err
 	}
 	if err = awsmiddleware.AddRecordResponseTiming(stack); err != nil {
 		return err
 	}
-	if err = addClientUserAgent(stack); err != nil {
+	if err = addClientUserAgent(stack, options); err != nil {
 		return err
 	}
 	if err = smithyhttp.AddErrorCloseResponseBodyMiddleware(stack); err != nil {
 		return err
 	}
 	if err = smithyhttp.AddCloseResponseBodyMiddleware(stack); err != nil {
+		return err
+	}
+	if err = addSetLegacyContextSigningOptionsMiddleware(stack); err != nil {
 		return err
 	}
 	if err = addOpGetPlatformApplicationAttributesValidationMiddleware(stack); err != nil {
@@ -130,6 +145,9 @@ func (c *Client) addOperationGetPlatformApplicationAttributesMiddlewares(stack *
 	if err = addRequestResponseLogging(stack, options); err != nil {
 		return err
 	}
+	if err = addDisableHTTPSMiddleware(stack, options); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -137,7 +155,6 @@ func newServiceMetadataMiddleware_opGetPlatformApplicationAttributes(region stri
 	return &awsmiddleware.RegisterServiceMetadata{
 		Region:        region,
 		ServiceID:     ServiceID,
-		SigningName:   "sns",
 		OperationName: "GetPlatformApplicationAttributes",
 	}
 }

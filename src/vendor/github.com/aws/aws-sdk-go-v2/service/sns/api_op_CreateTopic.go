@@ -4,6 +4,7 @@ package sns
 
 import (
 	"context"
+	"fmt"
 	awsmiddleware "github.com/aws/aws-sdk-go-v2/aws/middleware"
 	"github.com/aws/aws-sdk-go-v2/aws/signer/v4"
 	"github.com/aws/aws-sdk-go-v2/service/sns/types"
@@ -70,7 +71,12 @@ type CreateTopicInput struct {
 	//   in the Key Management Service API Reference.
 	// The following attributes apply only to FIFO topics (https://docs.aws.amazon.com/sns/latest/dg/sns-fifo-topics.html)
 	// :
-	//   - FifoTopic – When this is set to true , a FIFO topic is created.
+	//   - ArchivePolicy – Adds or updates an inline policy document to archive
+	//   messages stored in the specified Amazon SNS topic.
+	//   - BeginningArchiveTime – The earliest starting point at which a message in the
+	//   topic’s archive can be replayed from. This point in time is based on the
+	//   configured message retention period set by the topic’s message archiving policy.
+	//
 	//   - ContentBasedDeduplication – Enables content-based deduplication for FIFO
 	//   topics.
 	//   - By default, ContentBasedDeduplication is set to false . If you create a FIFO
@@ -109,12 +115,22 @@ type CreateTopicOutput struct {
 }
 
 func (c *Client) addOperationCreateTopicMiddlewares(stack *middleware.Stack, options Options) (err error) {
+	if err := stack.Serialize.Add(&setOperationInputMiddleware{}, middleware.After); err != nil {
+		return err
+	}
 	err = stack.Serialize.Add(&awsAwsquery_serializeOpCreateTopic{}, middleware.After)
 	if err != nil {
 		return err
 	}
 	err = stack.Deserialize.Add(&awsAwsquery_deserializeOpCreateTopic{}, middleware.After)
 	if err != nil {
+		return err
+	}
+	if err := addProtocolFinalizerMiddlewares(stack, options, "CreateTopic"); err != nil {
+		return fmt.Errorf("add protocol finalizers: %v", err)
+	}
+
+	if err = addlegacyEndpointContextSetter(stack, options); err != nil {
 		return err
 	}
 	if err = addSetLoggerMiddleware(stack, options); err != nil {
@@ -135,22 +151,22 @@ func (c *Client) addOperationCreateTopicMiddlewares(stack *middleware.Stack, opt
 	if err = addRetryMiddlewares(stack, options); err != nil {
 		return err
 	}
-	if err = addHTTPSignerV4Middleware(stack, options); err != nil {
-		return err
-	}
 	if err = awsmiddleware.AddRawResponseToMetadata(stack); err != nil {
 		return err
 	}
 	if err = awsmiddleware.AddRecordResponseTiming(stack); err != nil {
 		return err
 	}
-	if err = addClientUserAgent(stack); err != nil {
+	if err = addClientUserAgent(stack, options); err != nil {
 		return err
 	}
 	if err = smithyhttp.AddErrorCloseResponseBodyMiddleware(stack); err != nil {
 		return err
 	}
 	if err = smithyhttp.AddCloseResponseBodyMiddleware(stack); err != nil {
+		return err
+	}
+	if err = addSetLegacyContextSigningOptionsMiddleware(stack); err != nil {
 		return err
 	}
 	if err = addOpCreateTopicValidationMiddleware(stack); err != nil {
@@ -171,6 +187,9 @@ func (c *Client) addOperationCreateTopicMiddlewares(stack *middleware.Stack, opt
 	if err = addRequestResponseLogging(stack, options); err != nil {
 		return err
 	}
+	if err = addDisableHTTPSMiddleware(stack, options); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -178,7 +197,6 @@ func newServiceMetadataMiddleware_opCreateTopic(region string) *awsmiddleware.Re
 	return &awsmiddleware.RegisterServiceMetadata{
 		Region:        region,
 		ServiceID:     ServiceID,
-		SigningName:   "sns",
 		OperationName: "CreateTopic",
 	}
 }
