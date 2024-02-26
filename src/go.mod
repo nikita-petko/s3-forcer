@@ -6,7 +6,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.18.44
 	github.com/aws/aws-sdk-go-v2/service/sns v1.28.1
 	github.com/golang/glog v1.1.1
-	github.com/gorilla/mux v1.8.0
+	github.com/gorilla/mux v1.8.1
 	github.com/prometheus/client_golang v1.17.0
 	github.com/sendgrid/sendgrid-go v3.12.0+incompatible
 	golang.org/x/sync v0.6.0
